@@ -57,13 +57,14 @@ func NewDetector() *Detector {
 // ParseCascade loads and parse the cascade file through the
 // Javascript `location.href` method, using the `js/syscall` package.
 // It will return the cascade file encoded into a byte array.
-func (d *Detector) ParseCascade(path string) ([]byte, error) {
+func (d *Detector) ParseCascade(p string) ([]byte, error) {
 	href := js.Global().Get("location").Get("href")
 	u, err := url.Parse(href.String())
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path
+	fmt.Println(u)
+	u.Path = p
 
 	resp, err := http.Get(u.String())
 	if err != nil || resp.StatusCode != 200 {
