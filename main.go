@@ -7,7 +7,6 @@ import (
 	_ "embed"
 	"fmt"
 	"image"
-	"image/color"
 	"log"
 	"syscall/js"
 
@@ -15,7 +14,7 @@ import (
 	"github.com/esimov/pigo/wasm/detector"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/hamao0820/gopher-effect/img"
 )
 
 var (
@@ -24,6 +23,10 @@ var (
 	canvas js.Value
 	ctx    js.Value
 	det    *detector.Detector
+
+	leftEye   *ebiten.Image
+	rightEye  *ebiten.Image
+	noseMouth *ebiten.Image
 )
 
 const (
@@ -34,6 +37,17 @@ const (
 func init() {
 	det = detector.NewDetector()
 	if err := det.UnpackCascades(); err != nil {
+		log.Fatal(err)
+	}
+
+	var err error
+	if leftEye, err = loadImage(img.LeftEye); err != nil {
+		log.Fatal(err)
+	}
+	if rightEye, err = loadImage(img.RightEye); err != nil {
+		log.Fatal(err)
+	}
+	if noseMouth, err = loadImage(img.NoseMouth); err != nil {
 		log.Fatal(err)
 	}
 
@@ -121,12 +135,36 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	screen.DrawImage(g.drawImg, nil)
-	// 目の位置に丸を描画
 	if g.faceNum > 0 {
-		c := color.RGBA{0xff, 0, 0, 0xff}
-		vector.DrawFilledCircle(screen, float32(g.cx), float32(g.cy), 5, c, true)
-		vector.DrawFilledCircle(screen, float32(g.leftEye.Col), float32(g.leftEye.Row), 5, c, true)
-		vector.DrawFilledCircle(screen, float32(g.rightEye.Col), float32(g.rightEye.Row), 5, c, true)
+		// left eye
+		{
+			opt := &ebiten.DrawImageOptions{}
+			size := g.leftEye.Scale * 2
+			dx, dy := float64(g.leftEye.Col)-float64(size/2), float64(g.leftEye.Row)-float64(size/2)
+			opt.GeoM.Scale(float64(2*g.leftEye.Scale)/float64(leftEye.Bounds().Dx()), float64(2*g.leftEye.Scale)/float64(leftEye.Bounds().Dy()))
+			opt.GeoM.Translate(dx, dy)
+			screen.DrawImage(leftEye, opt)
+		}
+
+		// right eye
+		{
+			opt := &ebiten.DrawImageOptions{}
+			size := g.rightEye.Scale * 2
+			dx, dy := float64(g.rightEye.Col)-float64(size/2), float64(g.rightEye.Row)-float64(size/2)
+			opt.GeoM.Scale(float64(2*g.rightEye.Scale)/float64(rightEye.Bounds().Dx()), float64(2*g.rightEye.Scale)/float64(rightEye.Bounds().Dy()))
+			opt.GeoM.Translate(dx, dy)
+			screen.DrawImage(rightEye, opt)
+		}
+
+		// nose mouth
+		{
+			opt := &ebiten.DrawImageOptions{}
+			size := g.rad / 4
+			dx, dy := g.cx-float64(size/2), g.cy
+			opt.GeoM.Scale(float64(size)/float64(noseMouth.Bounds().Dx()), float64(size)/float64(noseMouth.Bounds().Dy()))
+			opt.GeoM.Translate(dx, dy)
+			screen.DrawImage(noseMouth, opt)
+		}
 	}
 
 	if g.faceNum > 0 {
