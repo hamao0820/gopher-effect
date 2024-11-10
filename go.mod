@@ -2,7 +2,10 @@ module github.com/hamao0820/gopher-effect
 
 go 1.23.0
 
-require github.com/hajimehoshi/ebiten/v2 v2.8.4
+require (
+	github.com/esimov/pigo v1.4.6
+	github.com/hajimehoshi/ebiten/v2 v2.8.4
+)
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20240911145611-4856209ac325 // indirect
