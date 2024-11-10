@@ -57,14 +57,13 @@ func NewDetector() *Detector {
 // ParseCascade loads and parse the cascade file through the
 // Javascript `location.href` method, using the `js/syscall` package.
 // It will return the cascade file encoded into a byte array.
-func (d *Detector) ParseCascade(p string) ([]byte, error) {
+func (d *Detector) ParseCascade(path string) ([]byte, error) {
 	href := js.Global().Get("location").Get("href")
 	u, err := url.Parse(href.String())
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(u, u.Path)
-	u.Path = p
+	u.Path = path
 
 	resp, err := http.Get(u.String())
 	if err != nil || resp.StatusCode != 200 {
@@ -94,7 +93,7 @@ func (d *Detector) Log(args ...interface{}) {
 func (d *Detector) UnpackCascades() error {
 	p := pigo.NewPigo()
 
-	cascade, err = d.ParseCascade("cascade/facefinder")
+	cascade, err = d.ParseCascade("gopher-effect/cascade/facefinder")
 	if err != nil {
 		return errors.New("error reading the facefinder cascade file")
 	}
@@ -107,7 +106,7 @@ func (d *Detector) UnpackCascades() error {
 
 	plc := pigo.NewPuplocCascade()
 
-	puplocCascade, err = d.ParseCascade("cascade/puploc")
+	puplocCascade, err = d.ParseCascade("gopher-effect/cascade/puploc")
 	if err != nil {
 		return errors.New("error reading the puploc cascade file")
 	}
@@ -117,7 +116,7 @@ func (d *Detector) UnpackCascades() error {
 		return errors.New("error unpacking the puploc cascade file")
 	}
 
-	flpcs, err = d.parseFlpCascades("cascade/lps/")
+	flpcs, err = d.parseFlpCascades("gopher-effect/cascade/lps/")
 	if err != nil {
 		return errors.New("error unpacking the facial landmark points detection cascades")
 	}
