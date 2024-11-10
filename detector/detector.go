@@ -63,7 +63,7 @@ func (d *Detector) ParseCascade(p string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(u)
+	fmt.Println(u, u.Path)
 	u.Path = p
 
 	resp, err := http.Get(u.String())
