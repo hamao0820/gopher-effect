@@ -93,7 +93,7 @@ func (d *Detector) Log(args ...interface{}) {
 func (d *Detector) UnpackCascades() error {
 	p := pigo.NewPigo()
 
-	cascade, err = d.ParseCascade("https://hamao0820.github.io/gopher-effect/cascade/facefinder")
+	cascade, err = d.ParseCascade("cascade/facefinder")
 	if err != nil {
 		return errors.New("error reading the facefinder cascade file")
 	}
@@ -106,7 +106,7 @@ func (d *Detector) UnpackCascades() error {
 
 	plc := pigo.NewPuplocCascade()
 
-	puplocCascade, err = d.ParseCascade("https://hamao0820.github.io/gopher-effect/cascade/puploc")
+	puplocCascade, err = d.ParseCascade("cascade/puploc")
 	if err != nil {
 		return errors.New("error reading the puploc cascade file")
 	}
@@ -116,7 +116,7 @@ func (d *Detector) UnpackCascades() error {
 		return errors.New("error unpacking the puploc cascade file")
 	}
 
-	flpcs, err = d.parseFlpCascades("https://hamao0820.github.io/gopher-effect/cascade/lps/")
+	flpcs, err = d.parseFlpCascades("cascade/lps/")
 	if err != nil {
 		return errors.New("error unpacking the facial landmark points detection cascades")
 	}

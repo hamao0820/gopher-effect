@@ -11,9 +11,9 @@ import (
 	"syscall/js"
 
 	pigo "github.com/esimov/pigo/core"
-	"github.com/esimov/pigo/wasm/detector"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hamao0820/gopher-effect/detector"
 	"github.com/hamao0820/gopher-effect/img"
 )
 
